@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import backend.bo.CarBO;
 import backend.dao.CarDao;
@@ -11,6 +13,7 @@ import backend.entities.Car;
 
 
 @Service
+@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 public class CarBOImpl implements CarBO {
 	
 	@Autowired
@@ -36,6 +39,7 @@ public class CarBOImpl implements CarBO {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED , readOnly = false)
 	public Car create(Car car) {
 		
 		// Ensure the entity object to be created does NOT exist in the
@@ -47,11 +51,20 @@ public class CarBOImpl implements CarBO {
             return null;
         }
 
-        return carDao.save(car);
+        Car savedCar = carDao.save(car);
+        
+        
+        // ilustrate transtaction rollback
+        if(savedCar.getId() == 4L) {
+        	throw new RuntimeException("Roll me back");
+        }
+        
+        return savedCar;
 
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED , readOnly = false)
 	public Car update(Car car) {
 		
 		// Ensure the entity object to be updated exists in the repository to
@@ -71,6 +84,7 @@ public class CarBOImpl implements CarBO {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED , readOnly = false)
 	public void delete(Long id) {		
 		carDao.delete(id);
 	}

@@ -47,7 +47,7 @@ public class CarBOImpl implements CarBO {
         // an existing entity if the entity matching the supplied id exists.
 		
         if (car.getId() != null) {
-            // Cannot create Greeting with specified ID value
+            // Cannot create Car with specified ID value
             return null;
         }
 
@@ -73,7 +73,7 @@ public class CarBOImpl implements CarBO {
 		
         Car carToUpdate = findOne(car.getId());
         if (carToUpdate == null) {
-            // Cannot update Greeting that hasn't been persisted
+            // Cannot update Car that hasn't been persisted
             return null;
         }
 
@@ -85,7 +85,7 @@ public class CarBOImpl implements CarBO {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED , readOnly = false)
-	public void delete(Long id) {		
+	public void delete(Long id) {
 		carDao.delete(id);
 	}
 	
